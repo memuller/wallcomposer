@@ -1,9 +1,9 @@
 //@flow
 
-import React, { Component } from 'react';
-import logo from './logo.svg';
-import './App.css';
-import Display from './Display.js'
+import React, { Component } from 'react'
+import logo from './logo.svg'
+import './App.css'
+import Mosaic from './Mosaic'
 
 class App extends Component {
   render() {
@@ -16,9 +16,9 @@ class App extends Component {
         <p className="App-intro">
           To get started, edit <code>src/App.js</code> and save to reload.
         </p>
-        <Display />
+        <Mosaic />
       </div>
-    );
+    )
   }
 }
 
