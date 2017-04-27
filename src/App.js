@@ -1,6 +1,9 @@
+//@flow
+
 import React, { Component } from 'react';
 import logo from './logo.svg';
 import './App.css';
+import Display from './Display.js'
 
 class App extends Component {
   render() {
