@@ -1,22 +1,25 @@
 //@flow
 
 import React, { Component } from 'react'
-import logo from './logo.svg'
+import '../public/normalize.css'
+import '../public/skeleton.css'
 import './App.css'
 import Mosaic from './Mosaic'
 
 class App extends Component {
   render() {
     return (
-      <div className="App">
-        <div className="App-header">
-          <img src={logo} className="App-logo" alt="logo" />
-          <h2>Welcome to React</h2>
-        </div>
-        <p className="App-intro">
-          To get started, edit <code>src/App.js</code> and save to reload.
-        </p>
-        <Mosaic />
+      <div className="app">
+        <header>
+          <h2>Spanned Wallpaper Builder</h2>
+          <span className='buttons'>
+            <button>Previous</button>
+            <button>Settings</button>
+          </span>
+        </header>
+        <section id='mosaic' className='container'>
+          <Mosaic />
+        </section>
       </div>
     )
   }
