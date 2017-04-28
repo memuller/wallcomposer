@@ -2,27 +2,32 @@
 
 import React, { Component } from 'react'
 import Display from './Display'
-
+import type {Bounds, BasicDisplay, ElectronDisplay, DisplayProperties} from './Common'
 const electron = window.require('electron')
-
-type ElectronDisplay = {
-  width: Number, height: Number, x: Number, y: Number
-}
 
 type State = {
   stage: number,
-  displays: Array<ElectronDisplay>
+  displays: Array<BasicDisplay>,
+  bounds?: Bounds,
+  displayPositions?: Array<DisplayProperties>
 }
 
 type Props = {}
-
 
 class Mosaic extends Component<void, Props, State> {
   state: State
   props: Props
 
-  static getDisplays() :Array<ElectronDisplay> {
-    return electron.screen.getAllDisplays().map((d) => {
+  constructor(){
+    super()
+    this.state = {
+      stage:      -1,
+      displays:   Mosaic.getDisplays(),
+    }
+  }
+
+  static getDisplays() :Array<BasicDisplay> {
+    return electron.screen.getAllDisplays().map((d :ElectronDisplay) => {
       let obj = {}
       let properties = ['width', 'height', 'x', 'y']
       properties.forEach(property => obj[property] = d.bounds[property])
@@ -30,28 +35,72 @@ class Mosaic extends Component<void, Props, State> {
     })
   }
 
-  constructor(){
-    super()
-    this.state = {
-      stage: -1,
-      displays: Mosaic.getDisplays()
-    }
+  static getScreenBounds() :Bounds {
+    return {x: 700, y: 600}
+  }
+
+  get bounds() :Bounds {
+    if(this.state.bounds) return this.state.bounds
+
+    let bounds :Bounds = {x: 0, y: 0}
+    this.state.displays.forEach((d :BasicDisplay) => {
+      let [x,y] = [
+        Number(d.x) + Number(d.width),
+        Number(d.y) + Number(d.height)
+      ]
+      if(x > bounds.x) bounds.x = x
+      if(y > bounds.y) bounds.y = y
+    })
+    this.setState({ bounds: bounds })
+
+    return bounds
+  }
+
+  get displayPositions() :Array<DisplayProperties> {
+    if(this.state.displayPositions) return this.state.displayPositions
+
+    let positions = []
+    let bounds = this.bounds
+    this.state.displays.forEach((display :BasicDisplay, i) => {
+      positions[i] = {
+        x: Mosaic.getScreenBounds().x * Number(display.x) /bounds.x,
+        y: Mosaic.getScreenBounds().y * Number(display.y) /bounds.x,
+        width: Mosaic.getScreenBounds().x * Number(display.width) /bounds.x,
+        height: Mosaic.getScreenBounds().y * Number(display.height) /bounds.x,
+      }
+    })
+
+    let offsetY = Math.abs(Math.min(...positions.map(o => Number(o.y))))
+    let offsetX = Math.abs(Math.min(...positions.map(o => Number(o.x))))
+
+    positions.forEach((display :DisplayProperties, i) => {
+        positions[i].y +=offsetY
+        positions[i].x +=offsetX
+    })
+
+    this.setState({ displayPositions: positions })
+    return positions
+  }
+
+  componentWillMount(){
+    this.bounds && this.displayPositions
   }
 
   render(){
-    let displays = this.state.displays.map((display, i) => {
+
+    let displays = this.state.displays.map((display :BasicDisplay, i) => {
       return (
-        <Display  key={i}
-                  width={display.width}
-                  x={display.x}
-                  height={display.height}
-                  y={display.y}
+        <Display
+          key={i}
+          x={display.x} y={display.y}
+          width={display.width} height={display.height}
+          position={this.displayPositions[i]}
         />
       )
     })
 
     return (
-      <div>{displays}</div>
+      <div id='displays'>{displays}</div>
     )
   }
 }

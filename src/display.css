@@ -1,0 +1,10 @@
+#displays {
+  position: relative;
+}
+.display {
+  position: absolute;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 1px #ccc solid;
+}
