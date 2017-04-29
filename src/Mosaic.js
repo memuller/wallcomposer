@@ -12,7 +12,10 @@ type State = {
   displayPositions?: Array<DisplayProperties>
 }
 
-type Props = {}
+type Props = {
+  width?: Number,
+  height?: Number
+}
 
 class Mosaic extends Component<void, Props, State> {
   state: State
@@ -35,8 +38,8 @@ class Mosaic extends Component<void, Props, State> {
     })
   }
 
-  static getScreenBounds() :Bounds {
-    return {x: 700, y: 600}
+  get containerBounds() :Bounds {
+    return { x: Number(this.props.width), y: Number(this.props.width) }
   }
 
   get bounds() :Bounds {
@@ -62,11 +65,12 @@ class Mosaic extends Component<void, Props, State> {
     let positions = []
     let bounds = this.bounds
     this.state.displays.forEach((display :BasicDisplay, i) => {
+      console.log(this.props.height)
       positions[i] = {
-        x: Mosaic.getScreenBounds().x * Number(display.x) /bounds.x,
-        y: Mosaic.getScreenBounds().y * Number(display.y) /bounds.x,
-        width: Mosaic.getScreenBounds().x * Number(display.width) /bounds.x,
-        height: Mosaic.getScreenBounds().y * Number(display.height) /bounds.x,
+        x: this.containerBounds.x * Number(display.x) /bounds.x,
+        y: this.containerBounds.y * Number(display.y) /bounds.x,
+        width: this.containerBounds.x * Number(display.width) /bounds.x,
+        height: this.containerBounds.y * Number(display.height) /bounds.x,
       }
     })
 
@@ -87,7 +91,6 @@ class Mosaic extends Component<void, Props, State> {
   }
 
   render(){
-
     let displays = this.state.displays.map((display :BasicDisplay, i) => {
       return (
         <Display
