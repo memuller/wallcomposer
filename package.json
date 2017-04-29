@@ -5,6 +5,7 @@
   "main": "src/electron-main.js",
   "dependencies": {
     "react": "^15.5.4",
+    "react-container-dimensions": "^1.3.2",
     "react-dom": "^15.5.4"
   },
   "devDependencies": {
