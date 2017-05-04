@@ -43,8 +43,11 @@ class Mosaic extends Component<void, Props, State> {
   }
 
   get bounds() :Bounds {
-    if(this.state.bounds) return this.state.bounds
+    let bounds = this.state.bounds ? this.state.bounds : this.getBounds()
+    return bounds
+  }
 
+  getBounds() :Bounds {
     let bounds :Bounds = {x: 0, y: 0}
     this.state.displays.forEach((d :BasicDisplay) => {
       let [x,y] = [
@@ -55,17 +58,19 @@ class Mosaic extends Component<void, Props, State> {
       if(y > bounds.y) bounds.y = y
     })
     this.setState({ bounds: bounds })
-
     return bounds
   }
 
   get displayPositions() :Array<DisplayProperties> {
-    if(this.state.displayPositions) return this.state.displayPositions
+    let displays = this.state.displayPositions ? this.state.displayPositions : this.getDisplayPositions()
 
+    return displays
+  }
+
+  getDisplayPositions() :Array<DisplayProperties> {
     let positions = []
     let bounds = this.bounds
     this.state.displays.forEach((display :BasicDisplay, i) => {
-      console.log(this.props.height)
       positions[i] = {
         x: this.containerBounds.x * Number(display.x) /bounds.x,
         y: this.containerBounds.y * Number(display.y) /bounds.x,
@@ -86,8 +91,8 @@ class Mosaic extends Component<void, Props, State> {
     return positions
   }
 
-  componentWillMount(){
-    this.bounds && this.displayPositions
+  componentWillMount() :void {
+    this.getBounds() && this.getDisplayPositions()
   }
 
   render(){
