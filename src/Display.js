@@ -1,7 +1,8 @@
 //@flow
 import React, {Component} from 'react'
 import './display.css'
-import type {Bounds, DisplayProperties} from './Common'
+import type {DisplayProperties, File} from './Common'
+import Dropzone from 'react-dropzone'
 
 type Props = {
   width: Number,
@@ -25,7 +26,9 @@ class Display extends Component<void, Props, State> {
 
   }
 
-
+  onDrop(accepted :Array<File>, rejected :Array<File>){
+    let file = accepted[1]
+  }
 
   render() {
     let style= {
@@ -35,11 +38,11 @@ class Display extends Component<void, Props, State> {
       height: this.props.position.height
     }
     return (
-      <span className='display' style={style}>
+      <Dropzone className='display' style={style} onDrop={this.onDrop.bind(this)}>
         <span className='dimensions'>
           {this.props.width}x{this.props.height}
         </span>
-      </span>
+      </Dropzone>
     )
   }
 }
