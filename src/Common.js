@@ -18,3 +18,11 @@ export type DisplayProperties = {
   x: number,
   y: number
 }
+
+export type File = {
+  name :string,
+  path :string,
+  size :number,
+  type :string,
+  lastModified :number
+}
