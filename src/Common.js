@@ -26,3 +26,15 @@ export type File = {
   type :string,
   lastModified :number
 }
+
+export type Bitmap = {
+  data :Array<any>,
+  height: number,
+  width: number
+}
+
+export type Image = {
+  bitmap :Bitmap,
+  _originalMime: string,
+  getBase64: function
+}
