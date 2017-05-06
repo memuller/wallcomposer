@@ -4,7 +4,12 @@
 .display {
   position: absolute;
   display: flex;
+  border: 1px #ccc solid;
   align-items: center;
   justify-content: center;
-  border: 1px #ccc solid;
+}
+
+.display .dimensions {
+  padding: 5px;
+  background-color: rgba(255,255,255,0.7)
 }
