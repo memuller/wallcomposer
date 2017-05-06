@@ -4,6 +4,10 @@ import './display.css'
 import type {BasicDisplay, DisplayProperties, File, Image} from './Common'
 import Dropzone from 'react-dropzone'
 import 'jimp/browser/lib/jimp'
+import Download from 'react-file-download' //Download(data,filename)
+
+import Denodeify from 'es6-denodeify'
+const denodeify = Denodeify(Promise)
 
 type Props = {
   width: Number,
@@ -37,7 +41,8 @@ class Display extends Component<void, Props, State> {
   receiveImage(file :File) :void{
     window.Jimp.read(file.path).then((image) => {
       image.resize(this.props.display.width, this.props.display.height)
-        .getBase64('image/jpeg', (err, data) => {
+      let base64 = denodeify(image.getBase64.bind(image))
+      base64('image/jpeg').then((data) => {
           this.setState({image: image})
           this.setState({imageData: data })
       })
