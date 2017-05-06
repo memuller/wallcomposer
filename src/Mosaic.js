@@ -91,9 +91,12 @@ class Mosaic extends Component<void, Props, State> {
     return positions
   }
 
+
+
   componentWillMount() :void {
     this.getBounds() && this.getDisplayPositions()
   }
+
 
   render(){
     let displays = this.state.displays.map((display :BasicDisplay, i) => {
@@ -103,6 +106,7 @@ class Mosaic extends Component<void, Props, State> {
           x={display.x} y={display.y}
           width={display.width} height={display.height}
           position={this.displayPositions[i]}
+          display={display}
         />
       )
     })

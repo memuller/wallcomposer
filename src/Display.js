@@ -1,8 +1,9 @@
 //@flow
 import React, {Component} from 'react'
 import './display.css'
-import type {DisplayProperties, File} from './Common'
+import type {BasicDisplay, DisplayProperties, File, Image} from './Common'
 import Dropzone from 'react-dropzone'
+import 'jimp/browser/lib/jimp'
 
 type Props = {
   width: Number,
@@ -11,9 +12,12 @@ type Props = {
   y: Number,
   key?: Number,
   position: DisplayProperties,
+  display :BasicDisplay
 }
 type State = {
-  populated: boolean
+  populated: boolean,
+  image?: Image,
+  imageData?: string
 }
 
 class Display extends Component<void, Props, State> {
@@ -23,11 +27,21 @@ class Display extends Component<void, Props, State> {
   constructor(props :Props){
     super(props)
     this.state = { populated: false }
-
   }
 
   onDrop(accepted :Array<File>, rejected :Array<File>){
-    let file = accepted[1]
+    let file = accepted[0]
+    this.receiveImage(file)
+  }
+
+  receiveImage(file :File) :void{
+    window.Jimp.read(file.path).then((image) => {
+      image.resize(this.props.display.width, this.props.display.height)
+        .getBase64('image/jpeg', (err, data) => {
+          this.setState({image: image})
+          this.setState({imageData: data })
+      })
+    }).catch(err => console.log(err))
   }
 
   render() {
@@ -35,13 +49,15 @@ class Display extends Component<void, Props, State> {
       left: this.props.position.x,
       top: this.props.position.y,
       width: this.props.position.width,
-      height: this.props.position.height
+      height: this.props.position.height,
+      backgroundImage: `url('${String(this.state.imageData)}')`,
+      backgroundSize: 'cover',
     }
     return (
       <Dropzone className='display' style={style} onDrop={this.onDrop.bind(this)}>
-        <span className='dimensions'>
-          {this.props.width}x{this.props.height}
-        </span>
+          <span className='dimensions'>
+            {this.props.width}x{this.props.height}
+          </span>
       </Dropzone>
     )
   }
