@@ -14,9 +14,11 @@ type Props = {
   height: Number,
   x: Number,
   y: Number,
+  id: number,
   key?: Number,
   position: DisplayProperties,
-  display :BasicDisplay
+  display: BasicDisplay,
+  onUpdate: any
 }
 type State = {
   populated: boolean,
@@ -43,8 +45,9 @@ class Display extends Component<void, Props, State> {
       image.resize(this.props.display.width, this.props.display.height)
       let base64 = denodeify(image.getBase64.bind(image))
       base64('image/jpeg').then((data) => {
-          this.setState({image: image})
+          this.setState({image: image, populated: true})
           this.setState({imageData: data })
+          this.props.onUpdate(this.props.id, image)
       })
     }).catch(err => console.log(err))
   }

@@ -2,14 +2,23 @@
 
 import React, { Component } from 'react'
 import Display from './Display'
-import type {Bounds, BasicDisplay, ElectronDisplay, DisplayProperties} from './Common'
+import type {Bounds, BasicDisplay, ElectronDisplay, DisplayProperties, Image} from './Common'
+
+import 'jimp/browser/lib/jimp'
+import Download from 'react-file-download'
+
+import Denodeify from 'es6-denodeify'
+const denodeify = Denodeify(Promise)
+
 const electron = window.require('electron')
 
 type State = {
   stage: number,
   displays: Array<BasicDisplay>,
   bounds?: Bounds,
-  displayPositions?: Array<DisplayProperties>
+  displayPositions?: Array<DisplayProperties>,
+  children: Array<React$Element<any>>,
+  images: Array<Image>
 }
 
 type Props = {
@@ -26,6 +35,8 @@ class Mosaic extends Component<void, Props, State> {
     this.state = {
       stage:      -1,
       displays:   Mosaic.getDisplays(),
+      children:   [],
+      images:     []
     }
   }
 
@@ -91,28 +102,61 @@ class Mosaic extends Component<void, Props, State> {
     return positions
   }
 
-
-
-  componentWillMount() :void {
-    this.getBounds() && this.getDisplayPositions()
-  }
-
-
-  render(){
-    let displays = this.state.displays.map((display :BasicDisplay, i) => {
+  buildDisplays() :void {
+    this.setState({ children: this.state.displays.map((display :BasicDisplay, i) => {
       return (
         <Display
-          key={i}
+          key={i} id={i}
           x={display.x} y={display.y}
           width={display.width} height={display.height}
           position={this.displayPositions[i]}
           display={display}
+          onUpdate={this.displayUpdated.bind(this)}
         />
       )
     })
+    })
+  }
 
+  displayUpdated(which :number, image :Image){
+    let images = this.state.images
+    images[which] = image
+    this.setState({ images: images })
+
+    if(this.isReady) this.assemble()
+  }
+
+  get isReady() :boolean {
+    let filledDisplays = this.state.images.reduce((acc,val) => {
+      return acc + (val ? 1 : 0)
+    }, 0)
+    console.log(filledDisplays)
+    return filledDisplays == this.state.displays.length
+  }
+
+  assemble() :void {
+    let Jimp = window.Jimp
+
+    let assemble = (err, mosaic) => {
+      let getBuffer = denodeify(mosaic.getBuffer.bind(mosaic))
+      this.state.images.forEach((image, i) => {
+        mosaic.composite(image, this.state.displays[i].x, this.state.displays[i].y)
+      })
+      getBuffer('image/jpeg').then((buffer) => Download(buffer, 'result.jpg') )
+    }
+
+    let mosaic = new Jimp(this.bounds.x, this.bounds.y, assemble)
+
+  }
+
+  componentWillMount() :void {
+    this.getBounds() && this.getDisplayPositions() && this.buildDisplays()
+  }
+
+
+  render(){
     return (
-      <div id='displays'>{displays}</div>
+      <div id='displays'>{this.state.children}</div>
     )
   }
 }
