@@ -119,6 +119,8 @@ class Mosaic extends Component<void, Props, State> {
   }
 
   displayUpdated(which :number, image :Image){
+    if(this.isReady) this.clear()
+
     let images = this.state.images
     images[which] = image
     this.setState({ images: images })
@@ -130,8 +132,12 @@ class Mosaic extends Component<void, Props, State> {
     let filledDisplays = this.state.images.reduce((acc,val) => {
       return acc + (val ? 1 : 0)
     }, 0)
-    console.log(filledDisplays)
+
     return filledDisplays == this.state.displays.length
+  }
+
+  clear() :void {
+    this.setState({ images: [] })
   }
 
   assemble() :void {

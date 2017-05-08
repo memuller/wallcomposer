@@ -36,5 +36,6 @@ export type Bitmap = {
 export type Image = {
   bitmap :Bitmap,
   _originalMime: string,
-  getBase64: function
+  getBase64: function,
+  getBuffer: function
 }
