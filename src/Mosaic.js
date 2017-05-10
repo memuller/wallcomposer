@@ -138,7 +138,7 @@ class Mosaic extends Component<void, Props, State> {
       return acc + (val ? 1 : 0)
     }, 0)
 
-    return filledDisplays == this.state.displays.length
+    return filledDisplays === this.state.displays.length
   }
 
   clear() :void {
@@ -155,7 +155,7 @@ class Mosaic extends Component<void, Props, State> {
       })
       getBuffer('image/jpeg').then((buffer) => Download(buffer, 'result.jpg') )
     }
-    let mosaic = new Jimp(this.bounds.x, this.bounds.y, assemble)
+    new Jimp(this.bounds.x, this.bounds.y, assemble)
 
   }
 
