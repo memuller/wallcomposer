@@ -41,12 +41,25 @@ class Mosaic extends Component<void, Props, State> {
   }
 
   static getDisplays() :Array<BasicDisplay> {
-    return electron.screen.getAllDisplays().map((d :ElectronDisplay) => {
+    let displays = electron.screen.getAllDisplays().map((d :ElectronDisplay) => {
       let obj = {}
       let properties = ['width', 'height', 'x', 'y']
       properties.forEach(property => obj[property] = d.bounds[property])
       return obj
     })
+
+    return Mosaic.adjustDisplays(displays)
+  }
+
+  static adjustDisplays(displays :Array<BasicDisplay>) :Array<BasicDisplay> {
+    let offsetY = Math.abs(Math.min(...displays.map(o => Number(o.y))))
+    let offsetX = Math.abs(Math.min(...displays.map(o => Number(o.x))))
+
+    displays.forEach((display, i) => {
+        displays[i].y += offsetY
+        displays[i].x += offsetX
+    })
+    return displays
   }
 
   get containerBounds() :Bounds {
@@ -88,14 +101,6 @@ class Mosaic extends Component<void, Props, State> {
         width: this.containerBounds.x * Number(display.width) /bounds.x,
         height: this.containerBounds.y * Number(display.height) /bounds.x,
       }
-    })
-
-    let offsetY = Math.abs(Math.min(...positions.map(o => Number(o.y))))
-    let offsetX = Math.abs(Math.min(...positions.map(o => Number(o.x))))
-
-    positions.forEach((display :DisplayProperties, i) => {
-        positions[i].y +=offsetY
-        positions[i].x +=offsetX
     })
 
     this.setState({ displayPositions: positions })
@@ -150,7 +155,6 @@ class Mosaic extends Component<void, Props, State> {
       })
       getBuffer('image/jpeg').then((buffer) => Download(buffer, 'result.jpg') )
     }
-
     let mosaic = new Jimp(this.bounds.x, this.bounds.y, assemble)
 
   }

@@ -1,7 +1,7 @@
 //@flow
 
 export type BasicDisplay = {
-  width: Number, height: Number, x: Number, y: Number
+  width: number, height: number, x: number, y: number
 }
 
 export type ElectronDisplay = {

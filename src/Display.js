@@ -4,18 +4,17 @@ import './display.css'
 import type {BasicDisplay, DisplayProperties, File, Image} from './Common'
 import Dropzone from 'react-dropzone'
 import 'jimp/browser/lib/jimp'
-import Download from 'react-file-download' //Download(data,filename)
 
 import Denodeify from 'es6-denodeify'
 const denodeify = Denodeify(Promise)
 
 type Props = {
-  width: Number,
-  height: Number,
-  x: Number,
-  y: Number,
+  width: number,
+  height: number,
+  x: number,
+  y: number,
   id: number,
-  key?: Number,
+  key?: number,
   position: DisplayProperties,
   display: BasicDisplay,
   onUpdate: any
