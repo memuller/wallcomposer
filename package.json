@@ -1,7 +1,12 @@
 {
-  "name": "mtg",
+  "name": "wall-composer",
   "version": "0.1.0",
-  "private": true,
+  "author": {
+    "name": "Matheus E. Muller",
+    "email": "hello@memuller.com",
+    "url": "http://www.memuller.com"
+  },
+  "license": "MIT",
   "main": "src/electron-main.js",
   "dependencies": {
     "es6-denodeify": "^0.1.5",
