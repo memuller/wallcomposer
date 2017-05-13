@@ -1,5 +1,6 @@
 {
   "name": "wall-composer",
+  "description": "Builds wallpapers for multiple screen setups.",
   "version": "0.1.0",
   "author": {
     "name": "Matheus E. Muller",
@@ -8,6 +9,7 @@
   },
   "license": "MIT",
   "main": "src/electron-main.js",
+  "homepage": "./",
   "dependencies": {
     "es6-denodeify": "^0.1.5",
     "global": "^4.3.2",
@@ -64,14 +66,20 @@
     "whatwg-fetch": "2.0.2"
   },
   "scripts": {
-    "build": "node scripts/build.js",
+    "build-app": "node scripts/build.js",
     "test": "node scripts/test.js --env=jsdom",
     "flow": "flow",
     "electron": "electron .",
     "start": "nf start -p 3000",
     "electron-start": "node src/electron-starter.js",
     "react-start": "node scripts/start.js",
-    "package": "electron-packager ."
+    "package": "build --dir",
+    "dist": "build"
+  },
+  "build": {
+    "appId": "com.mem.wallcomposer.app",
+    "asar": true,
+    "files": ["**/*", "**/build/"]
   },
   "jest": {
     "collectCoverageFrom": [
