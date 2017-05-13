@@ -2,7 +2,7 @@
 
 import React, { Component } from 'react'
 import Display from './Display'
-import type {Bounds, BasicDisplay, ElectronDisplay, DisplayProperties, Image} from './Common'
+import type {Bounds, BasicDisplay, ElectronDisplay, DisplayProperties, Image, Message} from './Common'
 
 import 'jimp/browser/lib/jimp'
 import Download from 'react-file-download'
@@ -23,7 +23,8 @@ type State = {
 
 type Props = {
   width?: Number,
-  height?: Number
+  height?: Number,
+  onMessage: (type: string, message: string) => void
 }
 
 class Mosaic extends Component<void, Props, State> {
@@ -150,9 +151,11 @@ class Mosaic extends Component<void, Props, State> {
 
     let assemble = (err, mosaic) => {
       let getBuffer = denodeify(mosaic.getBuffer.bind(mosaic))
+      this.props.onMessage('progress', 'building...')
       this.state.images.forEach((image, i) => {
         mosaic.composite(image, this.state.displays[i].x, this.state.displays[i].y)
       })
+      this.props.onMessage('success', 'Done! You may compose more wallpapers by selecting other images.')
       getBuffer('image/jpeg').then((buffer) => Download(buffer, 'result.jpg') )
     }
     new Jimp(this.bounds.x, this.bounds.y, assemble)

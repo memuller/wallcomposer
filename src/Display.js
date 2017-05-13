@@ -17,7 +17,7 @@ type Props = {
   key?: number,
   position: DisplayProperties,
   display: BasicDisplay,
-  onUpdate: any
+  onUpdate: (id :number, image :Image) => mixed
 }
 type State = {
   populated: boolean,

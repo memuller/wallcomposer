@@ -39,3 +39,8 @@ export type Image = {
   getBase64: function,
   getBuffer: function
 }
+
+export type Message = {
+  kind: string,
+  text: string
+}
