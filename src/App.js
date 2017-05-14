@@ -26,8 +26,11 @@ class App extends Component {
   }
 
   message(kind :string, text :string){
-    console.log(this.state.message)
     this.setState({ message: {kind, text} })
+  }
+
+  notImplemented(){
+    this.message('error', 'Not implemented')
   }
 
   render() {
@@ -39,8 +42,8 @@ class App extends Component {
 
           </p>
           <span className='buttons'>
-            <button>Previous</button>
-            <button>Settings</button>
+            <button onClick={this.notImplemented.bind(this)}>Previous</button>
+            <button onClick={this.notImplemented.bind(this)}>Settings</button>
           </span>
         </header>
         <section id='messages'>
