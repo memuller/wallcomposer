@@ -13,12 +13,15 @@ const devMode = process.env.ELECTRON_START_URL ? true : false
 // be closed automatically when the JavaScript object is garbage collected.
 let mainWindow;
 
+const windowProperties = {
+  width: 800, height: 600,
+  icon: path.join(__dirname, '/assets/icon512.png'),
+  webPreferences: { webSecurity: false }
+}
 
 function createWindow() {
     // Create the browser window.
-    mainWindow = new BrowserWindow({width: 800, height: 600,
-      'webPreferences': { 'webSecurity': false }
-    });
+    mainWindow = new BrowserWindow(windowProperties);
 
     // and load the index.html of the app.
     const startUrl = process.env.ELECTRON_START_URL || url.format({
