@@ -39,15 +39,19 @@ class Display extends Component<void, Props, State> {
     this.receiveImage(file)
   }
 
+  updateImage(image :Image) :void {
+    let base64 = denodeify(image.getBase64.bind(image))
+    base64('image/jpeg').then((data) => {
+        this.setState({image: image, populated: true})
+        this.setState({imageData: data })
+        this.props.onUpdate(this.props.id, image)
+    })
+  }
+
   receiveImage(file :File) :void{
     window.Jimp.read(file.path).then((image) => {
       image.resize(this.props.display.width, this.props.display.height)
-      let base64 = denodeify(image.getBase64.bind(image))
-      base64('image/jpeg').then((data) => {
-          this.setState({image: image, populated: true})
-          this.setState({imageData: data })
-          this.props.onUpdate(this.props.id, image)
-      })
+      this.updateImage(image)
     }).catch(err => console.log(err))
   }
 
