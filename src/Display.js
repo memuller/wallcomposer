@@ -55,6 +55,16 @@ class Display extends Component<void, Props, State> {
     }).catch(err => console.log(err))
   }
 
+  flip(orientation :Array<boolean>){
+    if(this.state.populated){
+      let image :any = this.state.image
+      image.flip(...orientation)
+      this.updateImage(image)
+    }
+  }
+  flipH() { this.flip([true, false]) }
+  flipV() { this.flip([false, true]) }
+
   render() {
     let style= {
       left: this.props.position.x,
