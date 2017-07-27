@@ -23,7 +23,8 @@ type Props = {
 type State = {
   populated: boolean,
   image?: Image,
-  imageData?: string
+  imageData?: string,
+  working: boolean
 }
 
 class Display extends Component<void, Props, State> {
@@ -32,7 +33,7 @@ class Display extends Component<void, Props, State> {
 
   constructor(props :Props){
     super(props)
-    this.state = { populated: false }
+    this.state = { populated: false, working: false }
   }
 
   onDrop(accepted :Array<File>, rejected :Array<File>){
@@ -56,11 +57,25 @@ class Display extends Component<void, Props, State> {
     }).catch(err => console.log(err))
   }
 
+  canOperate() :boolean {
+    return this.state.populated && ! this.state.working
+  }
+
+  blockingOperation(func :Function){
+    this.setState({ working: true })
+    func.bind(this).call()
+    this.setState({ working: false })
+  }
+
   flip(orientation :Array<boolean>){
-    if(this.state.populated){
-      let image :any = this.state.image
-      image.flip(...orientation)
-      this.updateImage(image)
+    if(this.canOperate()){
+      this.blockingOperation(() => {
+        let image :any = this.state.image
+        image.flip(...orientation)
+        this.updateImage(image)
+      })
+    } else {
+      console.log('nope')
     }
   }
   flipH() { this.flip([true, false]) }
