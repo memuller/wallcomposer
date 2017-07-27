@@ -91,17 +91,15 @@ class Display extends Component<void, Props, State> {
       backgroundSize: 'cover',
     }
     return (
-      <div>
       <Dropzone className='display' style={style} onDrop={this.onDrop.bind(this)} disableClick={true} >
           <span className='dimensions'>
             {this.props.width}x{this.props.height}
           </span>
+          <span className='transforms'>
+            <TransformButton label='FlipH' action={this.flipH.bind(this)}/>
+            <TransformButton label='FlipV' action={this.flipV.bind(this)}/>
+          </span>
       </Dropzone>
-      <span className='transforms'>
-        <TransformButton label='FlipH' action={this.flipH.bind(this)}/>
-        <TransformButton label='FlipV' action={this.flipV.bind(this)}/>
-      </span>
-    </div>
     )
   }
 }
