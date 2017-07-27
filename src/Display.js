@@ -51,7 +51,7 @@ class Display extends Component<void, Props, State> {
 
   receiveImage(file :File) :void{
     window.Jimp.read(file.path).then((image) => {
-      image.resize(this.props.display.width, this.props.display.height)
+      image.scaleToFit(this.props.display.width, this.props.display.height)
       this.updateImage(image)
     }).catch(err => console.log(err))
   }
