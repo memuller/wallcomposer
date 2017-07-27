@@ -2,6 +2,7 @@
 import React, {Component} from 'react'
 import './display.css'
 import type {BasicDisplay, DisplayProperties, File, Image} from './Common'
+import TransformButton from './TransformButton'
 import Dropzone from 'react-dropzone'
 import 'jimp/browser/lib/jimp'
 
@@ -75,11 +76,17 @@ class Display extends Component<void, Props, State> {
       backgroundSize: 'cover',
     }
     return (
-      <Dropzone className='display' style={style} onDrop={this.onDrop.bind(this)}>
+      <div>
+      <Dropzone className='display' style={style} onDrop={this.onDrop.bind(this)} disableClick={true} >
           <span className='dimensions'>
             {this.props.width}x{this.props.height}
           </span>
       </Dropzone>
+      <span className='transforms'>
+        <TransformButton label='FlipH' action={this.flipH.bind(this)}/>
+        <TransformButton label='FlipV' action={this.flipV.bind(this)}/>
+      </span>
+    </div>
     )
   }
 }
