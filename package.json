@@ -48,6 +48,7 @@
     "extract-text-webpack-plugin": "1.0.1",
     "file-loader": "0.10.0",
     "flow-bin": "^0.44.2",
+    "flow-remove-types": "^1.2.1",
     "foreman": "^2.0.0",
     "fs-extra": "0.30.0",
     "html-webpack-plugin": "2.24.0",
@@ -74,12 +75,16 @@
     "electron-start": "node src/electron-starter.js",
     "react-start": "node scripts/start.js",
     "package": "build --dir",
-    "dist": "build"
+    "dist": "build",
+    "thing": "flow-node src/test.js"
   },
   "build": {
     "appId": "com.mem.wallcomposer.app",
     "asar": true,
-    "files": ["**/*", "**/build/"]
+    "files": [
+      "**/*",
+      "**/build/"
+    ]
   },
   "jest": {
     "collectCoverageFrom": [
